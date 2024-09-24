@@ -1,0 +1,22 @@
+.gui {
+  border: 1px solid grey;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin: 8px;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 0;
+  width: 200px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+  }
+
+  div:not(:last-of-type) {
+    border-bottom: 1px solid grey;
+  }
+}
