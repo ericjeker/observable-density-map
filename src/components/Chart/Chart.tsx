@@ -93,8 +93,6 @@ export default function Chart () {
   const containerRef = useRef<HTMLDivElement>(null)
   const [localData, setLocalData] = useState<SessionData[] | undefined>([])
   const [globalData, setGlobalData] = useState<SessionData[] | undefined>([])
-  const [combinedData, setCombinedData] = useState<SessionData[] | undefined>(
-    [])
 
   const [displayPoints, setDisplayPoints] = useState<boolean>(false)
   const [opacity, setOpacity] = useState<number>(5)
@@ -112,39 +110,15 @@ export default function Chart () {
 
         if (l === undefined || g === undefined) return
 
-        l = l.map(v => {
-          v.scope = Scope.LOCAL
-          return v
-        })
-
-        g = g.map(v => {
-          v.scope = Scope.GLOBAL
-          return v
-        })
-
         setLocalData(l)
         setGlobalData(g)
-
-        const c = [...l, ...g]
-
-        setCombinedData(c)
-
-        // // Create a 100x100 2D grid of the data (only used for contour chart)
-        // setLocalGrid(getGrid(l));
-        // setGlobalGrid(getGrid(g));
-        //
-        // if (localGrid === undefined || globalGrid === undefined) return;
-        //
-        // // Flatten the grid into a 1D array of values (only used for contour chart)
-        // setLocalArray(flattenGrid(localGrid));
-        // setGlobalArray(flattenGrid(globalGrid));
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
 
     fetchData().then() // not sure why `then()` is called here
-  })
+  }, [])
 
   /**
    * Generates a 100x100 grid from a set of data points, where each point increments the count of
@@ -181,8 +155,7 @@ export default function Chart () {
 
   // Build the Observable Plot Charts
   useEffect(() => {
-    if (localData === undefined || globalData === undefined || combinedData ===
-      undefined) return
+    if (localData === undefined || globalData === undefined) return
 
     const plot = Plot.plot({
       color: {
@@ -263,13 +236,7 @@ export default function Chart () {
     containerRef.current!.append(plot)
 
     return () => plot.remove()
-  }, [
-    localData,
-    globalData,
-    opacity,
-    bandwidth,
-    skew,
-    displayPoints])
+  }, [localData, globalData, opacity, bandwidth, skew, displayPoints])
 
   const togglePoints = () => {
     setDisplayPoints(!displayPoints)
